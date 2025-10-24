@@ -73,4 +73,9 @@ public class CartServiceImpl implements CartService{
             cartRepository.save(cart.get());
         }else throw new RuntimeException("Quantity is higher than the Available Stock");
     }
+
+    @Override
+    public void removeProduct(Long id) {
+        cartRepository.deleteById(id);
+    }
 }

@@ -11,4 +11,6 @@ public interface CartService {
     public List<Cart> fetchCartByUserId(Long id);
 
     public void updateQuantity(Long id,Long quantity);
+
+    public void removeProduct(Long id);
 }
