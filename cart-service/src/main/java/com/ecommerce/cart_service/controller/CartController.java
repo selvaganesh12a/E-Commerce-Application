@@ -6,6 +6,8 @@ import com.ecommerce.cart_service.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -20,8 +22,8 @@ public class CartController {
         else return "Error when creating the cart";
     }
 
-//    @GetMapping("/get/{id}")
-//    public List<Cart> getCartByUserId(){
-//
-//    }
+    @GetMapping("/fetch/{id}")
+    public List<Cart> fetchCartByUserId(@RequestParam("id") Long id){
+        return cartService.fetchCartByUserId(id);
+    }
 }

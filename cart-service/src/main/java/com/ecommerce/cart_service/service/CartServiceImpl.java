@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+
 @Service
 public class CartServiceImpl implements CartService{
     @Autowired
@@ -41,5 +43,10 @@ public class CartServiceImpl implements CartService{
         }else{
             throw new RuntimeException("Product not available or insufficient stock!");
         }
+    }
+
+    @Override
+    public List<Cart> fetchCartByUserId(Long id) {
+        return cartRepository.findByUserId(id);
     }
 }
