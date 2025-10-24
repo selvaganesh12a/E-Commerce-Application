@@ -23,7 +23,7 @@ public class CartController {
     }
 
     @GetMapping("/fetch/{id}")
-    public List<Cart> fetchCartByUserId(@RequestParam("id") Long id){
+    public List<Cart> fetchCartByUserId(@PathVariable("id") Long id){
         return cartService.fetchCartByUserId(id);
     }
 }
