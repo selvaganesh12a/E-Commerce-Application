@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cart")
@@ -22,8 +23,15 @@ public class CartController {
         else return "Error when creating the cart";
     }
 
-    @GetMapping("/fetch/{id}")
-    public List<Cart> fetchCartByUserId(@PathVariable("id") Long id){
+    @GetMapping("/fetch/{userId}")
+    public List<Cart> fetchCartByUserId(@PathVariable("userId") Long id){
         return cartService.fetchCartByUserId(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public String updateQuantity(@PathVariable("id") Long id,@RequestBody Map<String, Integer> requestBody){
+        Long quantity = Long.valueOf(requestBody.get("quantity"));
+        cartService.updateQuantity(id,quantity);
+        return "Cart Updated Successfully";
     }
 }

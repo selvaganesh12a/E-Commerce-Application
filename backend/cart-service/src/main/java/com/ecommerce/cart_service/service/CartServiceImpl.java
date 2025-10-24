@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService{
@@ -48,5 +49,28 @@ public class CartServiceImpl implements CartService{
     @Override
     public List<Cart> fetchCartByUserId(Long id) {
         return cartRepository.findByUserId(id);
+    }
+
+    @Override
+    public void updateQuantity(Long id,Long quantity) {
+        Optional<Cart> cart = cartRepository.findById(id);
+        ProductStockResponse stock = webClientBuilder.build()
+                .get()
+                .uri("http://product-service/product/stock/" + cart.get().getProductId())
+                .retrieve()
+                .bodyToMono(ProductStockResponse.class)
+                .block();
+        if(stock != null && stock.isAvailability() && quantity <= stock.getQuantity()){
+            cart.get().setQuantity(quantity);
+            Double price = webClientBuilder.build()
+                    .get()
+                    .uri("http://product-service/product/fetch/price/" + cart.get().getProductId())
+                    .retrieve()
+                    .bodyToMono(Double.class)
+                    .block();
+            Double totalPrice = price * quantity;
+            cart.get().setTotalPrice(totalPrice);
+            cartRepository.save(cart.get());
+        }else throw new RuntimeException("Quantity is higher than the Available Stock");
     }
 }

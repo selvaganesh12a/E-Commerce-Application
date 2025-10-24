@@ -9,4 +9,6 @@ public interface CartService {
     public Cart createCart(CartReq cart);
 
     public List<Cart> fetchCartByUserId(Long id);
+
+    public void updateQuantity(Long id,Long quantity);
 }
