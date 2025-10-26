@@ -13,4 +13,6 @@ public interface CartService {
     public void updateQuantity(Long id,Long quantity);
 
     public void removeProduct(Long id);
+
+    public void emptyCart(Long id);
 }

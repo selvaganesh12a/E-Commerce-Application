@@ -40,4 +40,10 @@ public class CartController {
         cartService.removeProduct(id);
         return "Product Removed from Cart Successfully";
     }
+
+    @DeleteMapping("/clear/{userId}")
+    public String emptyCart(@PathVariable("userId") Long id){
+        cartService.emptyCart(id);
+        return "Cart Cleared Successfully";
+    }
 }
