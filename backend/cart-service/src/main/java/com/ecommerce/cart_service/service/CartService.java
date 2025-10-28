@@ -1,6 +1,7 @@
 package com.ecommerce.cart_service.service;
 
 import com.ecommerce.cart_service.dto.CartReq;
+import com.ecommerce.cart_service.dto.CartTotalResponse;
 import com.ecommerce.cart_service.entity.Cart;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface CartService {
     public void removeProduct(Long id);
 
     public void emptyCart(Long id);
+
+    public CartTotalResponse cartTotalAmount(Long id);
 }

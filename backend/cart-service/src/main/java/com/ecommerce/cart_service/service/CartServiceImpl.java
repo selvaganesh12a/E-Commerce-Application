@@ -1,6 +1,7 @@
 package com.ecommerce.cart_service.service;
 
 import com.ecommerce.cart_service.dto.CartReq;
+import com.ecommerce.cart_service.dto.CartTotalResponse;
 import com.ecommerce.cart_service.dto.ProductStockResponse;
 import com.ecommerce.cart_service.entity.Cart;
 import com.ecommerce.cart_service.repository.CartRepository;
@@ -83,5 +84,18 @@ public class CartServiceImpl implements CartService{
     public void emptyCart(Long id) {
         List<Cart> userCartItems = cartRepository.findByUserId(id);
         cartRepository.deleteAll(userCartItems);
+    }
+
+    @Override
+    public CartTotalResponse cartTotalAmount(Long id) {
+        CartTotalResponse response = new CartTotalResponse();
+        response.setUserId(id);
+        Double total = (double) 0;
+        List<Cart> userCartItems = cartRepository.findByUserId(id);
+        for(Cart i: userCartItems){
+            total += i.getTotalPrice();
+        }
+        response.setTotalPrice(total);
+        return response;
     }
 }

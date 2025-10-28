@@ -1,6 +1,7 @@
 package com.ecommerce.cart_service.controller;
 
 import com.ecommerce.cart_service.dto.CartReq;
+import com.ecommerce.cart_service.dto.CartTotalResponse;
 import com.ecommerce.cart_service.entity.Cart;
 import com.ecommerce.cart_service.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,10 @@ public class CartController {
     public String emptyCart(@PathVariable("userId") Long id){
         cartService.emptyCart(id);
         return "Cart Cleared Successfully";
+    }
+
+    @GetMapping("/total/{userId}")
+    public CartTotalResponse cartTotalAmount(@PathVariable("userId") Long id){
+        return cartService.cartTotalAmount(id);
     }
 }
