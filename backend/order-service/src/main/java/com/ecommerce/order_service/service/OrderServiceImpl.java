@@ -1,5 +1,6 @@
 package com.ecommerce.order_service.service;
 
+import com.ecommerce.order_service.dto.CartItemDTO;
 import com.ecommerce.order_service.entity.Order;
 import com.ecommerce.order_service.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -81,5 +80,43 @@ public class OrderServiceImpl implements OrderService{
                 .bodyToMono(Void.class)
                 .block();
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public String checkout(Long id) {
+        List<CartItemDTO> cartItems = List.of(
+                Objects.requireNonNull(
+                        webclientBuilder.build()
+                                .get()
+                                .uri("http://cart-service/cart/fetch/" + id)
+                                .retrieve()
+                                .bodyToMono(CartItemDTO[].class)
+                                .block()));
+
+        for(CartItemDTO item: cartItems){
+            webclientBuilder.build()
+                    .put()
+                    .uri("http://product-service/product/stock/deduct/" + item.getProductId() + "/" + item.getQuantity())
+                    .retrieve()
+                    .bodyToMono(Void.class)
+                    .block();
+            Order order = new Order();
+            order.setUserId(id);
+            order.setProductId(item.getProductId());
+            order.setQuantity(Math.toIntExact(item.getQuantity()));
+            order.setTotalPrice(item.getTotalPrice());
+            order.setStatus("PLACED");
+            order.setOrderDate(LocalDateTime.now());
+            orderRepository.save(order);
+        }
+
+        webclientBuilder.build()
+                .delete()
+                .uri("http://cart-service/cart/clear/" + id)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .block();
+
+        return "Order Placed successfully for UserId : " + id;
     }
 }

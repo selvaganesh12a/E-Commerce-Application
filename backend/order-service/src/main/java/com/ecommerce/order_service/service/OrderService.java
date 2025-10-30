@@ -15,4 +15,6 @@ public interface OrderService {
     public Optional<Order> fetchOrderById(Long id);
 
     public void cancelOrder(Long id);
+
+    public String checkout(Long id);
 }

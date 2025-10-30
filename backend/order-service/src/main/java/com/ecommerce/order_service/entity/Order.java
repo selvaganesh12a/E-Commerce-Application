@@ -22,6 +22,7 @@ public class Order {
             strategy = GenerationType.SEQUENCE,
             generator = "sequencegenerator")
     private Long id;
+    private Long userId;
     private Long productId;
     private Integer quantity;
     private Double totalPrice;

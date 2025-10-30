@@ -36,4 +36,9 @@ public class OrderController {
         orderService.cancelOrder(id);
         return "order cancelled successfully";
     }
+
+    @PostMapping("/checkout/{userId}")
+    public String checkout(@PathVariable("userId") Long id){
+        return orderService.checkout(id);
+    }
 }
